@@ -24,7 +24,7 @@ from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 
 from e_commerce.api.serializers import *
-from e_commerce.models import Comic
+from e_commerce.models import *
 
 
 @api_view(http_method_names=['GET'])
@@ -228,3 +228,30 @@ class GetOneMarvelComicAPIView(RetrieveAPIView):
 
 
 # TODO: Class API Views for User and WishList
+
+class UserListAPIView(ListAPIView):
+    queryset= User.objects.all()
+    serializer_class= UserSerializer
+
+
+class UserRetrieveAPIView(RetrieveAPIView):
+     serializer_class = UserSerializer
+     queryset = User.objects.all()
+     lookup_field = 'username'
+
+     
+     def get_queryset(self):
+      
+        user = self.kwargs.get('username')
+        queryset = self.queryset.filter(username= user)
+        return queryset
+     
+
+class WishListAPIView(ListCreateAPIView):
+    serializer_class = WishListSerializer
+    queryset = WishList.objects.all()
+    permission_classes=[]
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+
